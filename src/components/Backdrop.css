@@ -1,0 +1,76 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  /* Art stops cleanly at the column's edge — a hard edge, no fade. */
+  --edge: calc(var(--content-width) / 2);
+  mask-image: linear-gradient(
+    to right,
+    #000 calc(50% - var(--edge)),
+    transparent calc(50% - var(--edge)),
+    transparent calc(50% + var(--edge)),
+    #000 calc(50% + var(--edge))
+  );
+  animation: backdrop-in 0.6s ease both;
+}
+
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ── figure: your artwork, seated on the ground at the bottom of the right margin ── */
+.figure {
+  --gutter: calc((100vw - var(--content-width)) / 2);
+  position: absolute;
+  bottom: 0;
+  right: calc(var(--gutter) * 0.5);
+  width: min(calc(var(--gutter) * 0.7), 46vh);
+  height: auto;
+  transform: translateX(50%);
+  /* White paper vanishes; only the ink shows. */
+  mix-blend-mode: multiply;
+  animation: figure-in 1.6s ease 0.8s both;
+}
+:root[data-theme="dark"] .figure {
+  /* Ink becomes pale, black paper vanishes against the black page. */
+  filter: invert(1) brightness(0.9);
+  mix-blend-mode: screen;
+}
+@keyframes figure-in {
+  from {
+    opacity: 0;
+    transform: translateX(50%) translateY(10px);
+  }
+}
+
+/* Petals float above the page (below the theme toggle) and never block clicks. */
+.petals {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.backdrop canvas,
+.petals canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .figure {
+    animation: none;
+  }
+}
+
+@media print {
+  .backdrop,
+  .petals {
+    display: none;
+  }
+}

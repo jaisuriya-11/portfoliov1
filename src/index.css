@@ -1,0 +1,75 @@
+:root {
+  --content-width: 800px;
+
+  --bg: #f8f7f4; /* washi */
+  --surface: #fdfcfa;
+  --fg: #1b1a18;
+  --muted: #6f6c66;
+  --line: #e6e3dc;
+  --hatch: #e9e6df;
+  --accent: #b5412f; /* shu — vermilion seal ink */
+
+  --grain-opacity: 0.05;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
+}
+
+:root[data-theme="dark"] {
+  --bg: #000; /* plain black */
+  --surface: #000;
+  --fg: #ecebe7;
+  --muted: #9b978f;
+  --line: #22211f;
+  --hatch: #1e1d1b;
+  --accent: #d9634f;
+
+  --grain-opacity: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Background lives on <html> only: a body background would paint over the
+   z-index:-1 ink canvas. */
+html {
+  background: var(--bg);
+}
+
+html,
+body {
+  margin: 0;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Washi paper grain over everything, never blocking clicks. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+:root[data-theme="dark"] body::after {
+  mix-blend-mode: screen;
+}
+
+/* Theme view-transition: let the JS clip-path animation do the work. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+a {
+  color: inherit;
+}
