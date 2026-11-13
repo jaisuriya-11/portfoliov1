@@ -1,0 +1,126 @@
+/*
+ * Tailwind v4 for the shadcn/ui components. Preflight (Tailwind's CSS reset)
+ * is left out on purpose so the hand-written styles keep working as they are;
+ * only the theme and utility layers are loaded.
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "tw-animate-css";
+
+@source "../";
+
+/* The site's theme switch sets data-theme on <html>. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/*
+ * shadcn/ui colour names, pointed at the site's own tokens
+ * (src/index.css) so components follow the light and dark themes.
+ */
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--fg);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--fg);
+  --color-primary: var(--fg);
+  --color-primary-foreground: var(--bg);
+  --color-secondary: var(--line);
+  --color-secondary-foreground: var(--fg);
+  --color-muted: var(--line);
+  --color-muted-foreground: var(--muted);
+  --color-accent: var(--line);
+  --color-accent-foreground: var(--fg);
+  --color-destructive: #e40014;
+  --color-destructive-foreground: #fff;
+  --color-border: var(--rule);
+  --color-input: var(--rule);
+  --color-ring: var(--rule-strong);
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-code);
+
+  --animate-accordion-down: accordion-down 0.22s var(--ease-enter);
+  --animate-accordion-up: accordion-up 0.18s var(--ease-exit);
+  --animate-content-show: content-show 0.18s var(--ease-enter);
+  --animate-content-hide: content-hide 0.14s var(--ease-exit);
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  @keyframes content-show {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes content-hide {
+    from {
+      opacity: 1;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+  }
+}
+
+/*
+ * The small part of Tailwind's reset the components rely on: solid borders
+ * in the border colour, and form controls that inherit the page font.
+ * Layered, so any hand-written rule still takes precedence.
+ */
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-width: 0;
+    border-style: solid;
+    border-color: var(--color-border);
+  }
+
+  button,
+  input {
+    font: inherit;
+    color: inherit;
+    background: transparent;
+  }
+
+  /* Links styled as buttons keep the button look. */
+  a {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  /* Radix renders the accordion header as an h3. */
+  h3 {
+    margin: 0;
+  }
+}

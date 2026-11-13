@@ -1,4 +1,4 @@
-import { createSignal, Show } from "solid-js";
+import { useState } from "react";
 
 /**
  * Your own artwork, seated in the bottom of the right margin.
@@ -9,10 +9,6 @@ import { createSignal, Show } from "solid-js";
  * until the file exists.
  */
 export default function Figure() {
-  const [ok, setOk] = createSignal(true);
-  return (
-    <Show when={ok()}>
-      <img class="figure" src="/figure.png" alt="" aria-hidden="true" decoding="async" onError={() => setOk(false)} />
-    </Show>
-  );
+  const [ok, setOk] = useState(true);
+  return ok ? <img className="figure" src="/figure.png" alt="" aria-hidden="true" decoding="async" onError={() => setOk(false)} /> : null;
 }

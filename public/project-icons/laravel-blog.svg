@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" role="img" aria-label="Laravel Blog">
+  <rect width="40" height="40" rx="10" fill="#200d14" />
+  <!-- Blog document and quill / Laravel accent -->
+  <rect x="9" y="9" width="14" height="18" rx="2.5" fill="#f43f5e" />
+  <line x1="12" y1="14" x2="20" y2="14" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="12" y1="18" x2="18" y2="18" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="12" y1="22" x2="16" y2="22" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Feather / pen element -->
+  <path d="M22 28 L30 14 C31 12 30 10 28 11 L19 22 Z" fill="#fb7185" opacity="0.9" />
+  <circle cx="28" cy="13" r="1.5" fill="#ffffff" />
+</svg>

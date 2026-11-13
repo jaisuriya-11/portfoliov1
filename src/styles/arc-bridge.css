@@ -1,0 +1,36 @@
+/*
+ * Arc UI (uiarc.dev) tokens, pointed at the site's own palette.
+ * foundation.css ships its own neutral greys and large, soft radii; these
+ * overrides keep Arc components on the site's paper / near-black colours and
+ * tighten the corners. Loaded after foundation.css and index.css, and listed
+ * for both themes because foundation.css sets its dark values on
+ * :root[data-theme="dark"], which outranks a plain :root.
+ */
+:root,
+:root[data-theme="dark"] {
+  --background: var(--bg);
+  --foreground: var(--fg);
+  --surface-raised: var(--surface);
+  --surface-muted: color-mix(in srgb, var(--fg) 5%, var(--surface));
+  --text-secondary: var(--muted);
+  --text-muted: color-mix(in srgb, var(--muted) 75%, var(--bg));
+  --border: color-mix(in srgb, var(--rule) 65%, var(--line));
+  --border-subtle: var(--line);
+  --border-strong: color-mix(in srgb, var(--rule-strong) 70%, var(--rule));
+  --accent-foreground: var(--bg);
+
+  --radius-control: 8px;
+  --radius-panel: 10px;
+  --radius-surface: 14px;
+
+  --font-display: var(--font-body);
+
+  /* Fill for card panels: the page colour itself, so cards are defined by their border only. */
+  --panel: var(--bg);
+}
+
+:root[data-theme="dark"] {
+  --shadow-resting: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-raised: 0 8px 24px rgb(0 0 0 / 0.45), 0 1px 3px rgb(0 0 0 / 0.35);
+  --shadow-floating: 0 24px 60px rgb(0 0 0 / 0.6), 0 3px 10px rgb(0 0 0 / 0.4);
+}

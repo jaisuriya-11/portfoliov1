@@ -46,6 +46,16 @@
   }
 }
 
+/* Limbs that grow over the column's edge: above the page, under the petals.
+   Their shadow is drawn in the canvas (see sakura.ts), not with a CSS filter. */
+.vines {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  animation: backdrop-in 0.6s ease both;
+}
+
 /* Petals float above the page (below the theme toggle) and never block clicks. */
 .petals {
   position: fixed;
@@ -55,6 +65,7 @@
 }
 
 .backdrop canvas,
+.vines canvas,
 .petals canvas {
   position: absolute;
   inset: 0;
@@ -63,6 +74,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .backdrop,
+  .vines,
   .figure {
     animation: none;
   }
@@ -70,6 +82,7 @@
 
 @media print {
   .backdrop,
+  .vines,
   .petals {
     display: none;
   }

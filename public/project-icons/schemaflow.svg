@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" role="img" aria-label="SchemaFlow">
+  <rect width="40" height="40" rx="10" fill="#0d1527" />
+  <!-- Database Schema Nodes -->
+  <rect x="8" y="10" width="10" height="7" rx="2" fill="#2563eb" />
+  <rect x="22" y="10" width="10" height="7" rx="2" fill="#3b82f6" />
+  <rect x="15" y="23" width="10" height="7" rx="2" fill="#60a5fa" />
+  <!-- Connector lines -->
+  <path d="M13 17 v3 h9 v3" stroke="#60a5fa" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  <circle cx="13" cy="17" r="1" fill="#93c5fd" />
+  <circle cx="22" cy="23" r="1" fill="#93c5fd" />
+</svg>

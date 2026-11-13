@@ -1,30 +1,65 @@
 :root {
-  --content-width: 800px;
+  --content-width: 720px;
 
-  --bg: #f8f7f4; /* washi */
-  --surface: #fdfcfa;
-  --fg: #1b1a18;
-  --muted: #6f6c66;
-  --line: #e6e3dc;
-  --hatch: #e9e6df;
-  --accent: #b5412f; /* shu — vermilion seal ink */
+  /* Colours from jaisur.vercel.app: warm paper in light, near-black in dark. */
+  --bg: #faf8f5;
+  --surface: #f3f2ef;
+  --fg: #060604;
+  --muted: #4f4d48;
+  --line: #e6e4e0;
+  --hatch: #e6e4e0;
+  --accent: #060604;
+  --rule: #c6c4be; /* dotted frame lines */
+  --rule-strong: #65635e; /* marks where frame lines cross */
+  --online: #00bb7f;
 
-  --grain-opacity: 0.05;
+  /* Footer dusk scene. */
+  --sky-top: #f3d6ad;
+  --sky-mid: #eaa96a;
+  --sky-low: #d4753e;
+  --sun: #fff1d6;
+  --cloud-hi: #fff4ea;
+  --cloud-lo: #eec29a;
+  --town: #5c4636;
+  --line-ink: #3b2b22;
+  --stars: 0;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Type: Geist for reading, Geist Mono only for small metadata (dates, handles, labels). */
+  --font-body: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-code: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-head: var(--font-body);
+
+  /* Motion: enter fast and decelerate, exit faster and accelerate. */
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --dur-1: 140ms;
+  --dur-2: 220ms;
+  --dur-3: 420ms;
   --font-serif: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif;
 }
 
 :root[data-theme="dark"] {
-  --bg: #000; /* plain black */
-  --surface: #000;
-  --fg: #ecebe7;
-  --muted: #9b978f;
-  --line: #22211f;
-  --hatch: #1e1d1b;
-  --accent: #d9634f;
+  --bg: #030303;
+  --surface: #070707;
+  --fg: #e8e8e8;
+  --muted: #808080;
+  --line: #161616;
+  --hatch: #161616;
+  --accent: #e8e8e8;
+  --rule: #292929;
+  --rule-strong: #636363;
 
-  --grain-opacity: 0;
+  --sky-top: #060a1c;
+  --sky-mid: #18183a;
+  --sky-low: #3b2550;
+  --sun: #f3ead2;
+  --cloud-hi: #3a3358;
+  --cloud-lo: #1c1a33;
+  --town: #0b0a14;
+  --line-ink: #020205;
+  --stars: 0.85;
+
 }
 
 *,
@@ -37,30 +72,20 @@
    z-index:-1 ink canvas. */
 html {
   background: var(--bg);
+  /* Full-bleed frame lines are 100vw wide; never let them cause sideways scroll. */
+  overflow-x: clip;
 }
 
 html,
 body {
   margin: 0;
   color: var(--fg);
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   transition: background-color 0.4s ease, color 0.4s ease;
-}
-
-/* Washi paper grain over everything, never blocking clicks. */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-  opacity: var(--grain-opacity);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  mix-blend-mode: multiply;
-}
-:root[data-theme="dark"] body::after {
-  mix-blend-mode: screen;
 }
 
 /* Theme view-transition: let the JS clip-path animation do the work. */
