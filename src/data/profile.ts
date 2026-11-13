@@ -108,7 +108,9 @@ export const profile = {
   banner: "/hands-day.jpg",
   bannerNight: "/hands-night.jpg" as string | undefined,
   /** Square photo in the profile row. */
-  avatar: "/avatar.png",
+  avatar: "/avatar-skull.png",
+  /** Second avatar, swapped in when the avatar is clicked (white rays behind it). */
+  avatarAlt: "/avatar.png",
   /** First line of the bio. `**word**` renders bold. */
   intro:
     "Hey, I'm a developer who turns **caffeine into code** and random ideas into things that actually work. ☕",

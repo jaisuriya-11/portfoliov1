@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "../lib/theme";
+import { flipSound } from "../lib/sound";
 import { achievements } from "../data/offclock";
 import { profile, type Role } from "../data/profile";
 import ArcLink from "./ArcLink";
@@ -101,15 +102,41 @@ const BIO_ICONS = [Wrench, Sparkles];
 
 export function Hero({ tools }: { tools: ReactNode }) {
   const [avatarOk, fail] = useImageOk(profile.avatar);
+  // Clicking the avatar swaps between the skull and the portrait.
+  const [alt, setAlt] = useState(false);
   const [mail, setMail] = useState(false);
   return (
     <>
       <EmailDialog open={mail} onOpenChange={setMail} />
       <div className="profile band">
-        <div className="avatar">
-          {avatarOk ? <img src={profile.avatar} alt={profile.name} onError={fail} /> : <span aria-hidden="true">{profile.name.slice(0, 1)}</span>}
+        <button
+          type="button"
+          className={cn("avatar", alt && "is-alt")}
+          data-own-sound
+          onClick={() => {
+            if (!profile.avatarAlt) return;
+            flipSound();
+            setAlt((a) => !a);
+          }}
+          aria-label={`${profile.name}: flip picture`}
+          aria-pressed={alt}
+        >
+          {avatarOk ? (
+            <span className="avatar__card">
+              <span className="avatar__face avatar__face--front">
+                <img src={profile.avatar} alt={profile.name} onError={fail} />
+              </span>
+              {profile.avatarAlt && (
+                <span className="avatar__face avatar__face--back">
+                  <img src={profile.avatarAlt} alt="" />
+                </span>
+              )}
+            </span>
+          ) : (
+            <span className="avatar__initial" aria-hidden="true">{profile.name.slice(0, 1)}</span>
+          )}
           {profile.available && <i className="avatar__status" title="Open to work" />}
-        </div>
+        </button>
         <div className="profile__id">
           <h1 className="profile__name">{profile.name}</h1>
           <p className="profile__sub">

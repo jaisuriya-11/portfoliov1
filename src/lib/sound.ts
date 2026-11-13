@@ -4,6 +4,7 @@ import type { Theme } from "./theme";
 /*
  * UI sounds, synthesised with Web Audio (no audio files):
  *  - tap: a short, soft water-drop pop on clicks;
+ *  - flip: a soft swish and a light card snap, for the avatar turning over;
  *  - theme: two plucked-string notes, koto-like to suit the sakura, rising
  *    into light and falling into dark.
  * On by default; the Settings switch turns them off and the choice is
@@ -131,6 +132,49 @@ export function tap() {
   tick(0.18);
 }
 
+/**
+ * Card flip: a short burst of filtered noise sweeping up (the swish of the
+ * card turning), then a quiet low pop as it lands.
+ */
+export function flipSound() {
+  if (!soundStore.get()) return;
+  const c = audio();
+  if (!c) return;
+  const t = c.currentTime;
+
+  const len = Math.floor(c.sampleRate * 0.22);
+  const noise = c.createBuffer(1, len, c.sampleRate);
+  const d = noise.getChannelData(0);
+  for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  const src = c.createBufferSource();
+  src.buffer = noise;
+  const band = c.createBiquadFilter();
+  band.type = "bandpass";
+  band.Q.value = 1.4;
+  band.frequency.setValueAtTime(700, t);
+  band.frequency.exponentialRampToValueAtTime(3200, t + 0.16);
+  const swish = c.createGain();
+  swish.gain.setValueAtTime(0.0001, t);
+  swish.gain.exponentialRampToValueAtTime(0.16, t + 0.05);
+  swish.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
+  src.connect(band).connect(swish).connect(c.destination);
+  src.start(t);
+  src.stop(t + 0.22);
+
+  const osc = c.createOscillator();
+  const pop = c.createGain();
+  const at = t + 0.17;
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(260, at);
+  osc.frequency.exponentialRampToValueAtTime(140, at + 0.08);
+  pop.gain.setValueAtTime(0.0001, at);
+  pop.gain.exponentialRampToValueAtTime(0.22, at + 0.005);
+  pop.gain.exponentialRampToValueAtTime(0.0001, at + 0.1);
+  osc.connect(pop).connect(c.destination);
+  osc.start(at);
+  osc.stop(at + 0.12);
+}
+
 /** Two plucked notes: rising into light, falling into dark. */
 export function themeSound(next: Theme) {
   if (!soundStore.get()) return;
@@ -138,8 +182,8 @@ export function themeSound(next: Theme) {
   pluck(next === "light" ? [659.25, 880] : [440, 329.63], 0.32);
 }
 
-/** Things that make a tap when pressed. The theme toggle has its own cue. */
-const TAPPABLE = "a[href], button:not([data-theme-toggle]), [role='tab'], .skill";
+/** Things that make a tap when pressed. The theme toggle and avatar have their own cues. */
+const TAPPABLE = "a[href], button:not([data-theme-toggle]):not([data-own-sound]), [role='tab'], .skill";
 
 /** Plays the tap for any press on an interactive element. Returns a cleanup function. */
 export function installTapSounds() {

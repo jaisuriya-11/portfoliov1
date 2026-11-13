@@ -190,49 +190,118 @@ html {
   flex: none;
   width: 80px;
   height: 80px;
-  padding: 2px;
-  border: 1px solid var(--rule);
-  border-radius: 50%;
-  background: var(--surface);
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
 }
 
-.avatar img,
-.avatar span {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
+.avatar:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
 }
 
-/* The portrait is a cut-out over its white rays and a sakura-red ground:
-   the primary petal colour by day, the dimmed one at night. */
+/* The avatar is a card with a picture on each side: the skull on the front,
+   the portrait (with its white rays) on the back. A click turns it over. */
 .avatar {
   --avatar-ground: #cf3a50;
+  perspective: 480px;
+  transition: transform 0.2s ease;
 }
 
 :root[data-theme="dark"] .avatar {
   --avatar-ground: #9a4c58;
 }
 
-.avatar::before {
+.avatar:active {
+  transform: scale(0.96);
+}
+
+.avatar__card {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.34, 1.4, 0.5, 1);
+}
+
+.avatar.is-alt .avatar__card {
+  transform: rotateY(180deg);
+}
+
+/* Each face carries the whole frame (border, inner ring, red ground), so the
+   border turns over with the picture. */
+.avatar__face {
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.avatar__face::before {
   content: "";
   position: absolute;
   inset: 2px;
-  border-radius: 50%;
-  background: url("/avatar-rays.png") center / cover no-repeat, var(--avatar-ground);
+  border-radius: 7px;
+  background: var(--avatar-ground);
   transition: background-color 0.4s ease;
 }
 
-/* The figure itself in ink: black and white, a little extra contrast. */
-.avatar img {
-  position: relative;
-  filter: grayscale(1) contrast(1.2) brightness(1.04);
+.avatar__face--back {
+  transform: rotateY(180deg);
 }
 
-.avatar span {
+.avatar__face--back::before {
+  background: url("/avatar-rays.png") center / cover no-repeat, var(--avatar-ground);
+}
+
+.avatar__face img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border-radius: 7px;
+  object-fit: cover;
+  /* The figure in ink: black and white, a little extra contrast. */
+  filter: grayscale(1) contrast(1.2);
+  transition: filter 0.4s ease;
+}
+
+.avatar__face--front img {
+  /* Inset a little so the red ground rings the artwork. */
+  padding: 7%;
+  object-fit: contain;
+}
+
+/* Hover brings back the artwork's own colours. */
+@media (hover: hover) {
+  .avatar:hover .avatar__face img {
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar__card {
+    transition-duration: 0.01s;
+  }
+}
+
+.avatar__initial {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 7px;
   background: var(--accent);
   color: #fff8f0;
   font-family: var(--font-serif);
