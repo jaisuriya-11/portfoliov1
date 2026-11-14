@@ -167,14 +167,6 @@ export const profile = {
       status: "live",
     },
     {
-      title: "Todo App",
-      blurb: "Blockchain-based todo application with smart contracts.",
-      image: "/projects/todo-app.jpg",
-      site: "https://5rhf7-eqaaa-aaaal-aczua-cai.icp0.io/",
-      tech: ["Juno", "React"],
-      status: "live",
-    },
-    {
       title: "MediCare Hub: High Availability on AWS",
       blurb: "Highly available, fault-tolerant healthcare app on AWS.",
       image: "/projects/medicare-aws.jpg",
