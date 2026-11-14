@@ -331,7 +331,7 @@ async function loadContributions(user: string): Promise<{ days: Day[]; total: nu
 
 async function loadPRs(user: string): Promise<PR[]> {
   try {
-    const r = await fetch(`https://api.github.com/search/issues?q=author:${encodeURIComponent(user)}+type:pr+-user:${encodeURIComponent(user)}&sort=created&order=desc&per_page=6`);
+    const r = await fetch(`https://api.github.com/search/issues?q=author:${encodeURIComponent(user)}+type:pr+-user:${encodeURIComponent(user)}&sort=created&order=desc&per_page=2`);
     if (!r.ok) return [];
     const j = await r.json();
     return (j.items ?? []).map((it: { title: string; html_url: string; repository_url: string; state: string; pull_request?: { merged_at?: string } }) => ({
