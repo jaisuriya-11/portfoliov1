@@ -1,4 +1,4 @@
-import { ArrowUpRight, Code2, Globe, X } from "lucide-react";
+import { ArrowUpRight, Code2, Globe, X } from "../lib/animated-icons";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";

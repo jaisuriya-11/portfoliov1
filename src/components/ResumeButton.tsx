@@ -1,4 +1,4 @@
-import { Download, ExternalLink } from "lucide-react";
+import { Download, ExternalLink } from "../lib/animated-icons";
 import { useState } from "react";
 import ArcLink from "./ArcLink";
 import { Button } from "./arc/button/button";

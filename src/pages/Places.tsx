@@ -1,4 +1,4 @@
-import { MapPin } from "lucide-react";
+import { MapPin } from "../lib/animated-icons";
 import { useMemo, useState } from "react";
 import SegmentedControl from "../components/arc/segmented-control/segmented-control";
 import { PageShell } from "../components/OffClockParts";

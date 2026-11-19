@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { X } from "../lib/animated-icons";
 import { Pagination } from "./arc/pagination/pagination";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect } from "react";

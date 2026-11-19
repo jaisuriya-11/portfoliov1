@@ -3731,3 +3731,63 @@ html.vt-page::view-transition-new(root) {
     aspect-ratio: 16 / 10;
   }
 }
+
+/* Animated icons: an inline box the size of the glyph, like a plain SVG icon. */
+.aicon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  vertical-align: middle;
+}
+.aicon > div {
+  display: inline-flex;
+}
+/* The LeetCode mark has no animated version: a small wiggle when its link is hovered. */
+:is(a, button):hover .icon-leetcode svg {
+  animation: lc-wiggle 0.5s ease;
+}
+@keyframes lc-wiggle {
+  30% {
+    transform: rotate(-12deg);
+  }
+  60% {
+    transform: rotate(8deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(a, button):hover .icon-leetcode svg {
+    animation: none;
+  }
+}
+
+/* ── Live "here now" count, after the role in the profile card ── */
+.online {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 1px solid var(--border);
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.online__eye {
+  flex: none;
+  /* Soft terminal green, like a "✔ done" status line. */
+  color: #80b97a;
+}
+/* Phones: its own line under the role, no divider. */
+@media (max-width: 640px) {
+  .online {
+    display: flex;
+    width: fit-content;
+    margin: 4px 0 0;
+    padding: 0;
+    border: 0;
+  }
+}

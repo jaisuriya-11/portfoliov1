@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, ArrowUpRight, BookOpen, RefreshCw, Sparkles, Wrench, Gamepad2, GraduationCap, MapPin, School, Trophy } from "lucide-react";
+import { ArrowLeft, ArrowRight, Gamepad, ArrowUpRight, BookOpen, RefreshCw, Sparkles, Wrench, GraduationCap, MapPin, School, Trophy } from "../lib/animated-icons";
 import { Avatar } from "./arc/avatar/avatar";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -18,6 +18,7 @@ import SkillGrid from "./SkillGrid";
 import SplitAccordion from "./SplitAccordion";
 import DuskScene from "./DuskScene";
 import EmailDialog from "./EmailDialog";
+import OnlineNow from "./OnlineNow";
 import { Icon } from "./icons";
 import SocialLink from "./SocialCards";
 
@@ -139,9 +140,10 @@ export function Hero({ tools }: { tools: ReactNode }) {
         </button>
         <div className="profile__id">
           <h1 className="profile__name">{profile.name}</h1>
-          <p className="profile__sub">
+          <div className="profile__sub">
             {profile.role}
-          </p>
+            <OnlineNow />
+          </div>
         </div>
         <div className="profile__tools">{tools}</div>
       </div>
@@ -520,7 +522,7 @@ export function Wins() {
 
         <div className="tile tile--shelf">
           <span className="tile__kicker">
-            <Gamepad2 size={13} /> Played · {String(o.played.length).padStart(2, "0")}
+            <Gamepad size={13} /> Played · {String(o.played.length).padStart(2, "0")}
           </span>
           <ul>
             {o.played.map((g) => (

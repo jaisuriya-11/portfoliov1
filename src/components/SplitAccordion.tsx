@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown } from "../lib/animated-icons";
 import { motion, MotionConfig, useReducedMotion } from "motion/react";
 import { useId, useState, type ReactNode } from "react";
 import { motionTokens } from "./arc/lib/motion-tokens";

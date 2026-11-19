@@ -1,6 +1,6 @@
 "use client";
 import { useLayoutEffect, useRef, useState } from "react";
-import { ChevronLeft as NavArrowLeft, ChevronRight as NavArrowRight } from "lucide-react";
+import { ChevronLeft as NavArrowLeft, ChevronRight as NavArrowRight } from "../../../lib/animated-icons";
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, type Variants } from "motion/react";
 import { motionTokens } from "../lib/motion-tokens";
 import styles from "./pagination.module.css";

@@ -1,4 +1,4 @@
-import { Settings2 } from "lucide-react";
+import { SlidersHorizontal } from "../lib/animated-icons";
 import { Popover, PopoverContent, PopoverTrigger } from "./arc/popover/popover";
 import { Switch } from "./arc/switch/switch";
 import { setSakura, useSakura } from "../lib/settings";
@@ -11,7 +11,7 @@ export default function Settings() {
   return (
     <Popover>
       <PopoverTrigger className="kbd settings__btn" aria-label="Settings">
-        <Settings2 size={15} strokeWidth={1.7} />
+        <SlidersHorizontal size={15} />
       </PopoverTrigger>
       <PopoverContent align="end" sideOffset={8} className="settings">
         <div className="settings__row">

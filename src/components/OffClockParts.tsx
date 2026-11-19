@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowUpRight, Search } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Search } from "../lib/animated-icons";
 import type { ReactNode } from "react";
 import type { Game, GameStatus } from "../data/offclock";
 import ArcLink from "./ArcLink";

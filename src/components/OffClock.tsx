@@ -1,4 +1,4 @@
-import { ArrowUpRight, Trophy } from "lucide-react";
+import { ArrowUpRight, Trophy } from "../lib/animated-icons";
 import { useState } from "react";
 import { achievements, anime, games, places } from "../data/offclock";
 import ArcLink from "./ArcLink";

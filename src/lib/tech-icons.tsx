@@ -1,4 +1,4 @@
-import { Cloud } from "lucide-react";
+import { Cloud } from "./animated-icons";
 import {
   siClaude,
   siCss,

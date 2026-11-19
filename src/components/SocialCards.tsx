@@ -1,4 +1,4 @@
-import { MapPin } from "lucide-react";
+import { MapPin } from "../lib/animated-icons";
 import { useState } from "react";
 import { cards, profile, type Social } from "../data/profile";
 import ArcLink from "./ArcLink";
