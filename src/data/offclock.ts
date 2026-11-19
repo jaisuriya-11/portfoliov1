@@ -125,8 +125,6 @@ export interface Place {
   /** My own note (visited places). */
   note?: string;
   image?: string;
-  /** More photos from the trip, shown in the gallery's grid after `image`. */
-  photos?: string[];
   /** For stand-in photos (places not visited yet): author · licence, and the source page. */
   credit?: string;
   creditLink?: string;
@@ -149,7 +147,6 @@ export const places: Place[] = [
     visited: true,
     date: "Aug 2024",
     image: "/places/kolli-hills.jpg",
-    photos: ["/gallery/kolli-hills/2.jpg", "/gallery/kolli-hills/3.jpg", "/gallery/kolli-hills/4.jpg", "/gallery/kolli-hills/5.jpg"],
     about: "Reached by a road of 70 hairpin bends, with sweeping views across the plains from the edge of the Eastern Ghats.",
   },
   {
@@ -158,7 +155,6 @@ export const places: Place[] = [
     visited: true,
     date: "Sep 2026",
     image: "/places/calicut.jpg",
-    photos: ["/gallery/calicut/2.jpg", "/gallery/calicut/3.jpg", "/gallery/calicut/4.jpg"],
     note: "My first solo trip. I wandered the old streets and the murals on my own, figured things out as I went, and came back having learned a lot — about travelling, and about myself.",
   },
   {
@@ -167,7 +163,6 @@ export const places: Place[] = [
     visited: true,
     date: "Jun 2026",
     image: "/places/n4-beach.jpg",
-    photos: ["/gallery/n4-beach/2.jpg", "/gallery/n4-beach/3.jpg", "/gallery/n4-beach/4.jpg"],
     note: "An evening out with friends on the north Chennai coast — sitting by the water, watching the fishing boats come in against the harbour cranes.",
   },
 

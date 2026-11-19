@@ -82,6 +82,20 @@ export default function ScrollIsland() {
 
       <div className="island">
         <nav className={open ? "island__pill is-open" : "island__pill"} aria-label="Sections">
+          <AnimatePresence initial={false}>
+            {open && (
+              <motion.ul className="island__list" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
+                {entries.map((e) => (
+                  <li key={e.id}>
+                    <button type="button" data-sec={e.id} className={e.id === active ? "is-active" : undefined} onClick={() => go(e.id)}>
+                      <span className="island__dot" aria-hidden="true" />
+                      {e.title}
+                    </button>
+                  </li>
+                ))}
+              </motion.ul>
+            )}
+          </AnimatePresence>
           <button type="button" className="island__head" onClick={() => setOpen((o) => !o)} aria-expanded={open}>
             <span className="island__ring" style={{ background: `conic-gradient(var(--fg) ${progress}%, var(--border) 0)` }} aria-hidden="true">
               <i />
@@ -98,20 +112,7 @@ export default function ScrollIsland() {
             </motion.span>
             <span className="island__pct">{Math.round(progress)}%</span>
           </button>
-          <AnimatePresence initial={false}>
-            {open && (
-              <motion.ul className="island__list" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
-                {entries.map((e) => (
-                  <li key={e.id}>
-                    <button type="button" data-sec={e.id} className={e.id === active ? "is-active" : undefined} onClick={() => go(e.id)}>
-                      <span className="island__dot" aria-hidden="true" />
-                      {e.title}
-                    </button>
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-          </AnimatePresence>
+
         </nav>
       </div>
     </MotionConfig>,

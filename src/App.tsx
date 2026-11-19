@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import Backdrop from "./components/Backdrop";
-import Gallery from "./components/Gallery";
 import ScrollIsland from "./components/ScrollIsland";
 import OffClock from "./components/OffClock";
 import Anime from "./pages/Anime";
@@ -22,12 +21,6 @@ const SHOW_WINS = false;
 
 /** Flip to true to show the Highlights section (achievement cards). */
 const SHOW_HIGHLIGHTS = true;
-
-/** Flip to true to show the anime quote band again. */
-const SHOW_QUOTES = false;
-
-/** Flip to false to hide the photo gallery. */
-const SHOW_GALLERY = true;
 
 /** Flip to false to hide the "Off the clock" section (games, anime, places, achievements). */
 const SHOW_OFF_CLOCK = false;
@@ -79,9 +72,7 @@ export default function App() {
         )}
         {/* Contact section is kept in Sections.tsx but not shown. */}
         {SHOW_HIGHLIGHTS && <Highlights />}
-        {SHOW_GALLERY && <Gallery />}
-        {/* Anime quote band: kept, not shown. */}
-        {SHOW_QUOTES && <QuoteBand />}
+        <QuoteBand />
         {/* Footer (© name · back to top) is kept in Sections.tsx but not shown. */}
         {/* Floating section index (Scroll Island). The old IndexNav is kept in components/ but not used. */}
         <ScrollIsland />
