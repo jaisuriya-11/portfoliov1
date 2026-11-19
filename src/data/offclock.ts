@@ -15,6 +15,13 @@ export interface Achievement {
   link?: string;
   /** A sentence for the highlight card. */
   blurb?: string;
+  /** Title for the Highlights slider, when it should differ from the part after "— " in `title`. */
+  heading?: string;
+  /** Cover photo for the Highlights slider (falls back to `image`), and its crop. */
+  cover?: string;
+  coverPos?: string;
+  /** One short line shown under the title in the Highlights slider (falls back to `blurb`). */
+  short?: string;
   tags?: string[];
 }
 
@@ -25,9 +32,13 @@ export const achievements: Achievement[] = [
     date: "May 2026",
     place: "Chennai, India",
     org: "Organized by Google Cloud",
+    heading: "Google Cloud Agentic Premier League",
     image: "/projects/apl-champion-badge.jpg",
+    cover: "/projects/apl-champion-cover.jpg",
+    coverPos: "50% 62%",
     badge: "/projects/apl-badge.jpg",
     link: "https://www.linkedin.com/posts/jaisuriya-p-k-7156a2236_googlecloud-buildwithai-googlecloudapl-share-7461669793603964928-O9jJ",
+    short: "Won the Chennai round of Google Cloud's Agentic Premier League.",
     blurb: "Won the Chennai round of Google Cloud's Agentic Premier League — building with agentic AI and Gemini under the clock.",
     tags: ["Agentic AI", "Gemini", "JavaScript", "Python"],
   },
@@ -38,6 +49,7 @@ export const achievements: Achievement[] = [
     place: "Google Ananta, Bengaluru",
     org: "Google Cloud · GDG Chennai",
     image: "/projects/apl-top15-group.jpg",
+    short: "Top 15 at the Grand Finale, live at Google Ananta, Bengaluru.",
     blurb: "Made the Top 15 at the Grand Finale, competing live at Google's Ananta office in Bengaluru.",
     tags: ["Agentic AI", "Google Cloud", "GDG"],
     link: "https://www.linkedin.com/posts/jaisuriya-p-k-7156a2236_googlecloud-agenticai-genai-ugcPost-7464333953055764480-leF3/",

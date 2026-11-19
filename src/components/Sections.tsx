@@ -1,4 +1,4 @@
-import { ArrowUpRight, BookOpen, RefreshCw, Sparkles, Wrench, Gamepad2, GraduationCap, MapPin, School, Trophy } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, BookOpen, RefreshCw, Sparkles, Wrench, Gamepad2, GraduationCap, MapPin, School, Trophy } from "lucide-react";
 import { Avatar } from "./arc/avatar/avatar";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -546,37 +546,139 @@ export function Wins() {
  * waves as the projects), the event and date, the title, who ran it, tags,
  * and a direct link to the post. No "view project" sheet.
  */
+/** Seconds each highlight stays before the slider moves on. */
+const HL_SECONDS = 6;
+
+/**
+ * Highlights as a slider: the title and a "Take a look" link on the left,
+ * the photo on the right. Arrows step; the segments
+ * under them show where you are, and the current one fills as it plays. It
+ * moves on by itself, pausing while the pointer or focus is on it. A new
+ * photo wipes in from the side it is coming from; the text rises in after it.
+ */
 export function Highlights() {
+  const reduce = useReducedMotion();
+  const n = achievements.length;
+  const [[i, dir], setSlide] = useState<[number, number]>([0, 1]);
+  const [paused, setPaused] = useState(false);
+  // Only plays while on screen, so the first slide isn't missed scrolling down.
+  const [seen, setSeen] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const go = (d: number) => setSlide(([cur]) => [(cur + d + n) % n, d]);
+  const a = achievements[i];
+  const auto = !reduce && n > 1 && !paused && seen;
+
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => setSeen(e.isIntersecting), { threshold: 0.5 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!auto) return;
+    const t = window.setTimeout(() => go(1), HL_SECONDS * 1000);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i, auto]);
+
+  const ease = [0.22, 1, 0.36, 1] as const;
+  const rise = (k: number) =>
+    reduce
+      ? {}
+      : {
+          initial: { opacity: 0, y: 14 },
+          animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease, delay: 0.15 + k * 0.07 } },
+          exit: { opacity: 0, y: -8, transition: { duration: 0.2 } },
+        };
+  const Tag = a.link ? "a" : "div";
+
   return (
     <Section id="highlights" title="Highlights">
-      <ul className="hlgrid">
-        {achievements.map((a) => {
-          const Tag = a.link ? "a" : "div";
-          return (
-            <li key={a.title}>
-              <Tag className="hlc" {...(a.link ? { href: a.link, target: "_blank", rel: "noreferrer" } : {})}>
-                {a.badge ? (
-                  <>
-                    <span className="hlc__stage" aria-hidden="true" />
-                    <img className="hlc__badge" src={a.badge} alt="" loading="lazy" decoding="async" />
-                  </>
-                ) : (
-                  a.image && <img className="hlc__img" src={a.image} alt="" loading="lazy" decoding="async" />
+      <div
+        ref={root}
+        className="hls"
+        onPointerEnter={() => setPaused(true)}
+        onPointerLeave={() => setPaused(false)}
+        onFocus={() => setPaused(true)}
+        onBlur={() => setPaused(false)}
+        onKeyDown={(e) => {
+          if (e.key === "ArrowRight") go(1);
+          if (e.key === "ArrowLeft") go(-1);
+        }}
+        aria-roledescription="carousel"
+      >
+        <div className="hls__text" aria-live="polite">
+          {/* Every slide's copy is laid in the same grid cell, invisibly, so the block is
+              always as tall as the longest one and the button and arrows never move. */}
+          <div className="hls__copybox">
+            {achievements.map((x) => (
+              <div key={x.title} className="hls__copy hls__copy--sizer" aria-hidden="true">
+                <h3 className="hls__title">{x.heading ?? x.title.split("— ")[1] ?? x.title}</h3>
+                {(x.short ?? x.blurb) && <p className="hls__blurb">{x.short ?? x.blurb}</p>}
+              </div>
+            ))}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div key={i} className="hls__copy">
+                <motion.h3 className="hls__title" {...rise(0)}>
+                  {a.heading ?? a.title.split("— ")[1] ?? a.title}
+                </motion.h3>
+                {(a.short ?? a.blurb) && (
+                  <motion.p className="hls__blurb" {...rise(1)}>
+                    {a.short ?? a.blurb}
+                  </motion.p>
                 )}
-                <span className="hlc__fade" aria-hidden="true" />
-                <span className="hlc__text">
-                  <span className="hlc__kind">{a.kind}</span>
-                  <strong>{a.title.split("— ")[1] ?? a.title}</strong>
-                  <small>
-                    {a.date} · {a.place}
-                  </small>
-                </span>
-                {a.link && <ArrowUpRight className="hlc__go" size={15} aria-hidden="true" />}
-              </Tag>
-            </li>
-          );
-        })}
-      </ul>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          {/* Stays put while the title and description change; only its link follows the slide. */}
+          <div className="hls__look" style={a.link ? undefined : { visibility: "hidden" }}>
+            <ArcLink variant="primary" size="sm" href={a.link ?? "#"} tabIndex={a.link ? undefined : -1}>
+              Take a look <ArrowUpRight size={14} aria-hidden="true" />
+            </ArcLink>
+          </div>
+          {n > 1 && (
+            <div className="hls__nav">
+              <button type="button" className="hls__btn" aria-label="Previous highlight" onClick={() => go(-1)}>
+                <ArrowLeft size={16} />
+              </button>
+              <button type="button" className="hls__btn" aria-label="Next highlight" onClick={() => go(1)}>
+                <ArrowRight size={16} />
+              </button>
+              <div className="hls__bars">
+                {achievements.map((x, k) => (
+                  <button key={x.title} type="button" className="hls__bar" aria-label={`Highlight ${k + 1}`} aria-current={k === i || undefined} onClick={() => setSlide([k, k > i ? 1 : -1])}>
+                    {k === i && <span key={i} className="hls__fill" style={{ animationDuration: `${HL_SECONDS}s`, animationPlayState: auto ? "running" : "paused" }} data-static={!auto && reduce ? "" : undefined} />}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <Tag className="hls__media" {...(a.link ? { href: a.link, target: "_blank", rel: "noreferrer", "aria-label": `${a.title} (opens post)` } : {})}>
+          <AnimatePresence initial={false} custom={dir}>
+            <motion.img
+              key={i}
+              className="hls__img"
+              src={a.cover ?? a.image ?? a.badge}
+              style={{ objectPosition: a.coverPos }}
+              alt=""
+              custom={dir}
+              variants={{
+                enter: (d: number) => ({ clipPath: d > 0 ? "inset(0 0 0 100%)" : "inset(0 100% 0 0)", scale: 1.12 }),
+                show: { clipPath: "inset(0 0 0 0%)", scale: 1, transition: { duration: 0.9, ease } },
+                leave: { opacity: 0.6, transition: { duration: 0.9 } },
+              }}
+              initial={reduce ? false : "enter"}
+              animate="show"
+              exit={reduce ? undefined : "leave"}
+            />
+          </AnimatePresence>
+          {a.link && <ArrowUpRight className="hls__go" size={16} aria-hidden="true" />}
+        </Tag>
+      </div>
     </Section>
   );
 }
