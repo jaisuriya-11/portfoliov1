@@ -3097,7 +3097,7 @@ html.vt-page::view-transition-new(root) {
 /* ── Scroll Island: floating section index ── */
 .island {
   position: fixed;
-  bottom: 16px;
+  top: 16px;
   left: 50%;
   z-index: 80;
   translate: -50% 0;
@@ -3111,7 +3111,7 @@ html.vt-page::view-transition-new(root) {
   backdrop-filter: blur(3px);
 }
 
-/* Fixed width; only the list grows (upward), so nothing morphs or bounces. */
+/* Fixed width; only the list grows (downward), so nothing morphs or bounces. */
 .island__pill {
   width: 272px;
   overflow: hidden;
@@ -3189,7 +3189,7 @@ html.vt-page::view-transition-new(root) {
   margin: 0;
   padding: 0 6px;
   overflow: hidden;
-  border-bottom: 1px solid var(--border);
+  border-top: 1px solid var(--border);
   list-style: none;
 }
 
@@ -3571,6 +3571,146 @@ html.vt-page::view-transition-new(root) {
   backdrop-filter: blur(6px);
 }
 
+/* ── Gallery: tall photo panels; one open wide, the rest narrow numbered slices ── */
+.gal {
+  display: flex;
+  gap: 8px;
+  height: 380px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.gal__item {
+  flex: 1 1 0;
+  min-width: 0;
+  transition: flex-grow 0.6s var(--ease-enter);
+}
+.gal__item[data-open] {
+  flex-grow: 7;
+}
+.gal__panel {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12px;
+  background: var(--panel);
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+/* Keyboard focus only: a ring so tabbing through the panels stays visible. */
+.gal__panel:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}
+.gal__panel img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Grey at rest, even when open; colour only under the pointer (same as Highlights). */
+  filter: grayscale(1);
+  transition:
+    filter 0.4s ease,
+    transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.gal__item[data-open] .gal__panel img {
+  transform: scale(1.04);
+}
+@media (hover: hover) {
+  .gal__panel:hover img,
+  .gal__panel:focus-visible img {
+    filter: saturate(1.35);
+  }
+}
+@media (hover: none) {
+  .gal__panel img {
+    filter: none;
+  }
+}
+.gal__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.6), transparent 45%), linear-gradient(to bottom, rgb(0 0 0 / 0.25), transparent 25%);
+}
+.gal__num {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  font: 500 12px/1 ui-monospace, "SF Mono", Menlo, monospace;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+}
+.gal__caption,
+.gal__go {
+  position: absolute;
+  bottom: 16px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.4s var(--ease-enter);
+  pointer-events: none;
+}
+.gal__caption {
+  left: 18px;
+  right: 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+}
+.gal__caption strong {
+  overflow: hidden;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-overflow: ellipsis;
+}
+.gal__caption small {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+.gal__go {
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+}
+.gal__item[data-open] .gal__caption,
+.gal__item[data-open] .gal__go {
+  opacity: 1;
+  transform: none;
+  transition-delay: 0.2s;
+}
+
+/* Phones: the panels stack and the open one grows downward. */
+@media (max-width: 640px) {
+  .gal {
+    flex-direction: column;
+    height: 520px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gal__item,
+  .gal__panel img,
+  .gal__caption,
+  .gal__go {
+    transition: none;
+  }
+}
+
 /* ── Highlights slider: story on the left, photo on the right ── */
 .hls {
   display: grid;
@@ -3732,34 +3872,266 @@ html.vt-page::view-transition-new(root) {
   }
 }
 
-/* Animated icons: an inline box the size of the glyph, like a plain SVG icon. */
-.aicon {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
+/* ── Gallery grid: one place's photos, full screen, as a bento ── */
+.tripgrid {
+  position: fixed;
+  inset: 0;
+  z-index: 65;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--bg);
+  color: var(--fg);
+}
+.tripgrid__inner {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  line-height: 0;
-  vertical-align: middle;
+  width: min(1100px, 100% - 32px);
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 40px 0;
 }
-.aicon > div {
+.tripgrid__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.tripgrid__title {
+  margin: 0;
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+.tripgrid__meta {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+.tripgrid__close {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.tripgrid__close:hover {
+  background: color-mix(in srgb, var(--fg) 8%, transparent);
+}
+/* Wide first column, two narrow ones; the big photo spans two rows. */
+.tripgrid__grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  /* Rows grow with the window's height, so the grid fills the screen instead of leaving a gap below. */
+  grid-auto-rows: clamp(160px, calc((100vh - 240px) / 2), 340px);
+  grid-auto-flow: dense;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tripgrid__grid > :first-child {
+  grid-row: span 2;
+}
+/* Four photos: the last one runs across both narrow columns. */
+.tripgrid__grid[data-count="4"] > :nth-child(4) {
+  grid-column: span 2;
+}
+.tripgrid__grid[data-count="1"] {
+  grid-template-columns: 1fr;
+}
+.tripgrid__grid[data-count="2"] {
+  grid-template-columns: 1fr 1fr;
+}
+.tripgrid__grid[data-count="2"] > :first-child {
+  grid-row: span 2;
+}
+.tripgrid__grid[data-count="2"] > :nth-child(2) {
+  grid-row: span 2;
+}
+.tripgrid__grid[data-count="3"] {
+  grid-template-columns: 2fr 1fr;
+}
+.tripgrid__cell {
+  position: relative;
+  min-width: 0;
+}
+.tripgrid__cell button {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+/* The photo's frame: rounded and cropped. The same frame grows into the zoomed view. */
+.tripgrid__frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--panel);
+}
+.tripgrid__frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Zoomed photo, inside the same overlay ── */
+.tripzoom {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+.tripzoom__bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(1100px, 100% - 32px);
+  margin: 0 auto;
+  padding: 24px 0 12px;
+}
+.tripzoom__back {
   display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px 0 8px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
 }
-/* The LeetCode mark has no animated version: a small wiggle when its link is hovered. */
-:is(a, button):hover .icon-leetcode svg {
-  animation: lc-wiggle 0.5s ease;
+.tripzoom__back:hover {
+  background: color-mix(in srgb, var(--fg) 8%, transparent);
 }
-@keyframes lc-wiggle {
-  30% {
-    transform: rotate(-12deg);
+.tripzoom__count {
+  margin-left: auto;
+  font-family: var(--font-code);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.tripzoom__stage {
+  position: relative;
+  cursor: zoom-out;
+}
+.tripzoom__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(8px);
+  color: inherit;
+  cursor: pointer;
+  translate: 0 -50%;
+}
+.tripzoom__nav--prev {
+  left: 20px;
+}
+.tripzoom__nav--next {
+  right: 20px;
+}
+.tripzoom__slot {
+  position: fixed;
+  top: calc(50% + 30px);
+  left: 50%;
+  z-index: 3;
+  translate: -50% -50%;
+}
+/* Click the open photo to magnify it; the pointer moves the point it's zoomed into. */
+.tripzoom__frame {
+  cursor: zoom-in;
+}
+.tripzoom__frame[data-mag] {
+  cursor: zoom-out;
+  /* While magnified, a finger drags around the photo instead of scrolling the page. */
+  touch-action: none;
+}
+.tripzoom__pan {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.tripzoom__pan img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform-origin 0.12s linear;
+  user-select: none;
+}
+@media (max-width: 640px) {
+  .tripzoom__nav {
+    top: auto;
+    bottom: 20px;
+    translate: none;
   }
-  60% {
-    transform: rotate(8deg);
+  .tripzoom__nav--prev {
+    left: calc(50% - 52px);
+  }
+  .tripzoom__nav--next {
+    right: calc(50% - 52px);
+  }
+  .tripzoom__slot {
+    top: calc(50% - 8px);
+  }
+  /* Edge to edge on phones: square corners, so the whole photo is as wide as the screen. */
+  .tripzoom__frame {
+    border-radius: 0;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  :is(a, button):hover .icon-leetcode svg {
-    animation: none;
+@media (max-width: 640px) {
+  .tripgrid__inner {
+    padding-top: 32px;
   }
+  .tripgrid__grid,
+  .tripgrid__grid[data-count="3"] {
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 130px;
+    gap: 10px;
+  }
+  .tripgrid__grid > :first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  .tripgrid__grid[data-count="4"] > :nth-child(4) {
+    grid-column: span 2;
+  }
+}
+
+/* Any modal open: hide the Index. Our own overlays mark themselves aria-modal;
+   Radix dialogs (email, achievements) lock scroll with body[data-scroll-locked]. */
+body:has([role="dialog"][aria-modal="true"]) .island,
+body:has([role="dialog"][aria-modal="true"]) .island__scrim,
+body[data-scroll-locked] .island,
+body[data-scroll-locked] .island__scrim {
+  display: none;
 }
 
 /* ── Live "here now" count, after the role in the profile card ── */
@@ -3789,5 +4161,35 @@ html.vt-page::view-transition-new(root) {
     margin: 4px 0 0;
     padding: 0;
     border: 0;
+  }
+}
+
+/* Animated icons: an inline box the size of the glyph, like a plain SVG icon. */
+.aicon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  vertical-align: middle;
+}
+.aicon > div {
+  display: inline-flex;
+}
+/* The LeetCode mark has no animated version: a small wiggle when its link is hovered. */
+:is(a, button):hover .icon-leetcode svg {
+  animation: lc-wiggle 0.5s ease;
+}
+@keyframes lc-wiggle {
+  30% {
+    transform: rotate(-12deg);
+  }
+  60% {
+    transform: rotate(8deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(a, button):hover .icon-leetcode svg {
+    animation: none;
   }
 }
